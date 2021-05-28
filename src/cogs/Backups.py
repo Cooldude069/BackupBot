@@ -31,14 +31,9 @@ class BackUp(commands.Cog):
                 break
 
         for channel in category.text_channels:
-            stopMessage = None
-            try:
-                stopMessage = data[str(channel.id)]
-            except KeyError:
-                stopMessage = 0
-            finally:
-                if not stopMessage:
-                    stopMessage = 0
+            stopMessage = 0
+            if str(channel.id) in data.keys():
+                stopMessage = data[str(channel.id)] if data[str(channel.id)] is not None else 0
             msgId = None
             logged = True
             async for message in channel.history(limit=None):
@@ -46,6 +41,7 @@ class BackUp(commands.Cog):
                     msgId = message.id
                     logged = False
                 if message.id == stopMessage:
+                    print(message.id == stopMessage)
                     break
                 if len(message.attachments):
                     for attachment in message.attachments:
